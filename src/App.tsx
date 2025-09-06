@@ -7,6 +7,8 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-reac
 // Pages
 import LandingPage from '@/pages/LandingPage';
 import Dashboard from '@/pages/Dashboard';
+import PatientDashboard from '@/pages/PatientDashboard';
+import DoctorDashboard from '@/pages/DoctorDashboard';
 import AppointmentsPage from '@/pages/AppointmentsPage';
 import NewAppointmentPage from '@/pages/NewAppointmentPage';
 import MedicalHistoryPage from '@/pages/MedicalHistoryPage';
@@ -64,15 +66,31 @@ const App: React.FC = () => {
               element={<div>Privacy Policy</div>} 
             />
 
-            {/* Protected Routes */}
-            <Route
-              path="/dashboard"
-              element={
-                <SignedIn>
-                  <Dashboard />
-                </SignedIn>
-              }
-            />
+                  {/* Protected Routes */}
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <SignedIn>
+                        <Dashboard />
+                      </SignedIn>
+                    }
+                  />
+                  <Route
+                    path="/patient-dashboard"
+                    element={
+                      <SignedIn>
+                        <PatientDashboard />
+                      </SignedIn>
+                    }
+                  />
+                  <Route
+                    path="/doctor-dashboard"
+                    element={
+                      <SignedIn>
+                        <DoctorDashboard />
+                      </SignedIn>
+                    }
+                  />
             
             <Route
               path="/appointments"
