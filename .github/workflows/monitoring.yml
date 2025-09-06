@@ -1,0 +1,32 @@
+name: Monitoring
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Every 6 hours
+  workflow_dispatch:
+
+jobs:
+  monitoring:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build
+      run: npm run build
+      
+    - name: Health check
+      run: curl -f https://renanrmartins.github.io/MedConnect/ || exit 1
+      
+    - name: Performance check
+      run: npx lighthouse-ci autorun --config=./lighthouse.config.js

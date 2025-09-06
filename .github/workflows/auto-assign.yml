@@ -1,0 +1,23 @@
+name: Auto Assign
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Auto assign
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { owner, repo, number } = context.issue;
+          await github.rest.issues.addAssignees({
+            owner,
+            repo,
+            issue_number: number,
+            assignees: ['renanrmartins']
+          });

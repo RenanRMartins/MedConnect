@@ -1,0 +1,18 @@
+# Global owners
+* @renanrmartins
+
+# Source code
+src/ @renanrmartins
+
+# Configuration files
+*.json @renanrmartins
+*.js @renanrmartins
+*.ts @renanrmartins
+*.tsx @renanrmartins
+
+# Documentation
+*.md @renanrmartins
+docs/ @renanrmartins
+
+# GitHub workflows
+.github/ @renanrmartins

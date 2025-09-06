@@ -1,0 +1,38 @@
+name: Auto Close
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  auto-close:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Auto close
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { owner, repo, number } = context.issue;
+          const { title, body } = context.payload.issue;
+          
+          const spamKeywords = ['spam', 'scam', 'fake', 'bot'];
+          const isSpam = spamKeywords.some(keyword => 
+            title.toLowerCase().includes(keyword) || 
+            body.toLowerCase().includes(keyword)
+          );
+          
+          if (isSpam) {
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: number,
+              body: 'This issue has been automatically closed due to spam detection.'
+            });
+            
+            await github.rest.issues.update({
+              owner,
+              repo,
+              issue_number: number,
+              state: 'closed'
+            });
+          }

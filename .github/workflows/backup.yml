@@ -1,0 +1,35 @@
+name: Backup
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Daily at 2 AM
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build
+      run: npm run build
+      
+    - name: Create backup
+      run: tar -czf backup-$(date +%Y%m%d).tar.gz dist/
+      
+    - name: Upload backup
+      uses: actions/upload-artifact@v3
+      with:
+        name: backup-${{ github.run_number }}
+        path: backup-*.tar.gz

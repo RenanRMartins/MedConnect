@@ -1,0 +1,45 @@
+name: Auto Label
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  auto-label:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Auto label
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { owner, repo, number } = context.issue;
+          const { title, body } = context.payload.issue || context.payload.pull_request;
+          
+          let labels = [];
+          
+          if (title.includes('bug') || title.includes('error') || title.includes('fix')) {
+            labels.push('bug');
+          }
+          
+          if (title.includes('feature') || title.includes('enhancement')) {
+            labels.push('enhancement');
+          }
+          
+          if (title.includes('docs') || title.includes('documentation')) {
+            labels.push('documentation');
+          }
+          
+          if (title.includes('test') || title.includes('testing')) {
+            labels.push('testing');
+          }
+          
+          if (labels.length > 0) {
+            await github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number: number,
+              labels
+            });
+          }

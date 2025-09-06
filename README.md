@@ -50,7 +50,7 @@ MedConnect é uma plataforma completa de agendamento de consultas médicas desen
 
 1. **Clone o repositório**
    ```bash
-   git clone https://github.com/seu-usuario/MedConnect.git
+   git clone https://github.com/renanrmartins/MedConnect.git
    cd MedConnect
    ```
 
@@ -83,7 +83,7 @@ MedConnect é uma plataforma completa de agendamento de consultas médicas desen
 
 3. **Acesse a aplicação**
    ```
-   https://seu-usuario.github.io/MedConnect
+   https://renanrmartins.github.io/MedConnect
    ```
 
 ## 📁 Estrutura do Projeto
