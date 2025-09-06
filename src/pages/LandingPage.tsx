@@ -504,7 +504,7 @@ const LandingPage: React.FC = () => {
               <h3 className="text-lg font-semibold mb-6">Links Rápidos</h3>
               <ul className="space-y-3">
                 <li><a href="#features" className="text-gray-400 hover:text-white transition-colors">Recursos</a></li>
-                <li><a href="#about" className="text-gray-400 hover:text-white transition-colors">Sobre Nós</a></li>
+                <li><a href="https://renanrmartins.github.io/oficina-git/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">Sobre Nós</a></li>
                 <li><a href="#testimonials" className="text-gray-400 hover:text-white transition-colors">Depoimentos</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Blog</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Carreiras</a></li>
