@@ -84,6 +84,7 @@ const PatientDashboard: React.FC = () => {
       icon: Plus,
       href: '/appointments/new',
       color: 'bg-primary-600 hover:bg-primary-700 shadow-lg',
+      onClick: () => window.location.href = '/appointments/new'
     },
     {
       title: 'Ver Agenda',
@@ -91,13 +92,15 @@ const PatientDashboard: React.FC = () => {
       icon: Calendar,
       href: '/appointments',
       color: 'bg-blue-600 hover:bg-blue-700 shadow-lg',
+      onClick: () => window.location.href = '/appointments'
     },
     {
       title: 'Histórico Médico',
       description: 'Acesse seu histórico',
       icon: TrendingUp,
-      href: '/medical-history',
+      href: '/patient-medical-history',
       color: 'bg-green-600 hover:bg-green-700 shadow-lg',
+      onClick: () => window.location.href = '/patient-medical-history'
     },
     {
       title: 'Suporte',
@@ -105,6 +108,7 @@ const PatientDashboard: React.FC = () => {
       icon: Users,
       href: '/support',
       color: 'bg-purple-600 hover:bg-purple-700 shadow-lg',
+      onClick: () => window.location.href = '/support'
     },
   ];
 
@@ -122,7 +126,7 @@ const PatientDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-dark-900">
       <Header />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -132,10 +136,10 @@ const PatientDashboard: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-dark-100 mb-2">
             Bem-vindo, {user?.firstName || 'Paciente'}! 👋
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-gray-600 dark:text-dark-300">
             Aqui está um resumo da sua saúde e consultas
           </p>
         </motion.div>
@@ -148,65 +152,65 @@ const PatientDashboard: React.FC = () => {
           className="mb-8"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardContent className="p-6">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Calendar className="w-5 h-5 text-blue-600" />
+                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                      <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                     </div>
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Total de Consultas</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.totalAppointments}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-dark-400">Total de Consultas</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-dark-100">{stats.totalAppointments}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardContent className="p-6">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
-                      <Clock className="w-5 h-5 text-yellow-600" />
+                    <div className="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                      <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                     </div>
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Próximas Consultas</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.upcomingAppointments}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-dark-400">Próximas Consultas</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-dark-100">{stats.upcomingAppointments}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardContent className="p-6">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                      <CheckCircle className="w-5 h-5 text-green-600" />
+                    <div className="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                      <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
                     </div>
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Consultas Realizadas</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.completedAppointments}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-dark-400">Consultas Realizadas</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-dark-100">{stats.completedAppointments}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardContent className="p-6">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <Heart className="w-5 h-5 text-purple-600" />
+                    <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                      <Heart className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                     </div>
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Avaliação Média</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.averageRating}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-dark-400">Avaliação Média</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-dark-100">{stats.averageRating}</p>
                   </div>
                 </div>
               </CardContent>
@@ -221,7 +225,7 @@ const PatientDashboard: React.FC = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mb-8"
         >
-          <Card>
+          <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
             <CardHeader title="Ações Rápidas" />
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -235,7 +239,7 @@ const PatientDashboard: React.FC = () => {
                   >
                     <button
                       className={`w-full h-28 flex flex-col items-center justify-center space-y-3 rounded-xl ${action.color} text-white border-0 transform transition-all duration-300 hover:scale-105 hover:shadow-xl`}
-                      onClick={() => window.location.href = action.href}
+                      onClick={action.onClick}
                     >
                       <action.icon className="w-8 h-8 group-hover:scale-110 transition-transform duration-300" />
                       <div className="text-center">
@@ -301,8 +305,8 @@ const PatientDashboard: React.FC = () => {
               <h3 className="text-lg font-semibold mb-6">Links Rápidos</h3>
               <ul className="space-y-3">
                 <li><a href="/appointments" className="text-gray-400 hover:text-white transition-colors">Minhas Consultas</a></li>
-                <li><a href="/medical-history" className="text-gray-400 hover:text-white transition-colors">Histórico Médico</a></li>
-                <li><a href="/reviews" className="text-gray-400 hover:text-white transition-colors">Avaliações</a></li>
+                <li><a href="/patient-medical-history" className="text-gray-400 hover:text-white transition-colors">Histórico Médico</a></li>
+                <li><a href="/patient-reviews" className="text-gray-400 hover:text-white transition-colors">Avaliações</a></li>
                 <li><a href="/support" className="text-gray-400 hover:text-white transition-colors">Suporte</a></li>
                 <li><a href="/profile" className="text-gray-400 hover:text-white transition-colors">Meu Perfil</a></li>
               </ul>
@@ -314,7 +318,7 @@ const PatientDashboard: React.FC = () => {
               <ul className="space-y-3">
                 <li><a href="/appointments/new" className="text-gray-400 hover:text-white transition-colors">Agendar Consulta</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Teleconsulta</a></li>
-                <li><a href="/medical-history" className="text-gray-400 hover:text-white transition-colors">Histórico Digital</a></li>
+                <li><a href="/patient-medical-history" className="text-gray-400 hover:text-white transition-colors">Histórico Digital</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Lembretes</a></li>
                 <li><a href="/support" className="text-gray-400 hover:text-white transition-colors">Suporte 24/7</a></li>
               </ul>

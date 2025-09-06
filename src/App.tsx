@@ -12,10 +12,16 @@ import DoctorDashboard from '@/pages/DoctorDashboard';
 import AppointmentsPage from '@/pages/AppointmentsPage';
 import NewAppointmentPage from '@/pages/NewAppointmentPage';
 import MedicalHistoryPage from '@/pages/MedicalHistoryPage';
+import PatientMedicalHistoryPage from '@/pages/PatientMedicalHistoryPage';
+import DoctorMedicalHistoryPage from '@/pages/DoctorMedicalHistoryPage';
 import ReviewsPage from '@/pages/ReviewsPage';
+import PatientReviewsPage from '@/pages/PatientReviewsPage';
+import DoctorReviewsPage from '@/pages/DoctorReviewsPage';
 import SupportPage from '@/pages/SupportPage';
 import ProfilePage from '@/pages/ProfilePage';
 import SettingsPage from '@/pages/SettingsPage';
+import PatientsPage from '@/pages/PatientsPage';
+import ReportsPage from '@/pages/ReportsPage';
 
 // Components
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -129,10 +135,46 @@ const App: React.FC = () => {
             />
             
             <Route
+              path="/patient-medical-history"
+              element={
+                <SignedIn>
+                  <PatientMedicalHistoryPage />
+                </SignedIn>
+              }
+            />
+            
+            <Route
+              path="/doctor-medical-history"
+              element={
+                <SignedIn>
+                  <DoctorMedicalHistoryPage />
+                </SignedIn>
+              }
+            />
+            
+            <Route
               path="/reviews"
               element={
                 <SignedIn>
                   <ReviewsPage />
+                </SignedIn>
+              }
+            />
+            
+            <Route
+              path="/patient-reviews"
+              element={
+                <SignedIn>
+                  <PatientReviewsPage />
+                </SignedIn>
+              }
+            />
+            
+            <Route
+              path="/doctor-reviews"
+              element={
+                <SignedIn>
+                  <DoctorReviewsPage />
                 </SignedIn>
               }
             />
@@ -160,6 +202,22 @@ const App: React.FC = () => {
               element={
                 <SignedIn>
                   <SettingsPage />
+                </SignedIn>
+              }
+            />
+            <Route
+              path="/patients"
+              element={
+                <SignedIn>
+                  <PatientsPage />
+                </SignedIn>
+              }
+            />
+            <Route
+              path="/reports"
+              element={
+                <SignedIn>
+                  <ReportsPage />
                 </SignedIn>
               }
             />

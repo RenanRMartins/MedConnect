@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react';
+import { useTheme } from '@/contexts/ThemeContext';
 import { 
   Stethoscope, 
   Calendar, 
@@ -22,11 +23,14 @@ import {
   Facebook,
   Twitter,
   Instagram,
-  Linkedin
+  Linkedin,
+  Sun,
+  Moon
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
 const LandingPage: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
   const features = [
     {
       icon: Calendar,
@@ -104,26 +108,39 @@ const LandingPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-dark-900">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
+      <header className="bg-white dark:bg-dark-800 shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center">
                 <Stethoscope className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold text-gray-900">MedConnect</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-dark-100">MedConnect</span>
             </div>
             
             <nav className="hidden md:flex space-x-8">
-              <a href="#features" className="text-gray-600 hover:text-primary-600 transition-colors">Recursos</a>
-              <a href="#about" className="text-gray-600 hover:text-primary-600 transition-colors">Sobre</a>
-              <a href="#testimonials" className="text-gray-600 hover:text-primary-600 transition-colors">Depoimentos</a>
-              <a href="#contact" className="text-gray-600 hover:text-primary-600 transition-colors">Contato</a>
+              <a href="#features" className="text-gray-600 dark:text-dark-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Recursos</a>
+              <a href="#about" className="text-gray-600 dark:text-dark-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Sobre</a>
+              <a href="#testimonials" className="text-gray-600 dark:text-dark-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Depoimentos</a>
+              <a href="#contact" className="text-gray-600 dark:text-dark-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Contato</a>
             </nav>
 
             <div className="flex items-center space-x-4">
+              {/* Theme Toggle */}
+              <button
+                onClick={toggleTheme}
+                className="p-2 text-gray-600 dark:text-dark-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-700"
+                title={`Alternar para modo ${theme === 'light' ? 'escuro' : 'claro'}`}
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-5 h-5" />
+                ) : (
+                  <Moon className="w-5 h-5" />
+                )}
+              </button>
+
               <SignedOut>
                 <SignInButton mode="modal">
                   <Button variant="outline" size="sm">
@@ -150,7 +167,7 @@ const LandingPage: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-50 via-white to-medical-50 py-20 lg:py-32">
+      <section className="relative bg-gradient-to-br from-primary-50 via-white to-medical-50 dark:from-dark-900 dark:via-dark-800 dark:to-dark-900 py-20 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -160,13 +177,13 @@ const LandingPage: React.FC = () => {
               className="space-y-8"
             >
               <div className="space-y-4">
-                <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 dark:text-dark-100 leading-tight">
                   Sua saúde em
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-medical-600">
                     {' '}primeiro lugar
                   </span>
                 </h1>
-                <p className="text-xl text-gray-600 leading-relaxed">
+                <p className="text-xl text-gray-600 dark:text-dark-300 leading-relaxed">
                   Conectamos você aos melhores profissionais de saúde com agendamento inteligente, 
                   histórico digital e atendimento humanizado. Sua jornada para uma vida mais saudável começa aqui.
                 </p>
@@ -225,32 +242,32 @@ const LandingPage: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative"
             >
-              <div className="relative bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
+              <div className="relative bg-white dark:bg-dark-800 rounded-3xl shadow-2xl p-8 border border-gray-100 dark:border-dark-700">
                 <div className="space-y-6">
                   <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                      <Stethoscope className="w-6 h-6 text-primary-600" />
+                    <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
+                      <Stethoscope className="w-6 h-6 text-primary-600 dark:text-primary-300" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Dr. Maria Santos</h3>
-                      <p className="text-sm text-gray-500">Cardiologista</p>
+                      <h3 className="font-semibold text-gray-900 dark:text-dark-100">Dr. Maria Santos</h3>
+                      <p className="text-sm text-gray-500 dark:text-dark-400">Cardiologista</p>
                     </div>
                     <div className="ml-auto flex items-center space-x-1">
                       <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium">4.9</span>
+                      <span className="text-sm font-medium text-gray-900 dark:text-dark-100">4.9</span>
                     </div>
                   </div>
                   
                   <div className="space-y-3">
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-dark-300">
                       <Calendar className="w-4 h-4" />
                       <span>Hoje, 14:30</span>
                     </div>
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-dark-300">
                       <MapPin className="w-4 h-4" />
                       <span>Hospital São Paulo</span>
                     </div>
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-dark-300">
                       <Clock className="w-4 h-4" />
                       <span>45 minutos</span>
                     </div>

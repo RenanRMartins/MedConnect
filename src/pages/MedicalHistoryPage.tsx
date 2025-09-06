@@ -87,7 +87,7 @@ const MedicalHistoryPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-dark-900">
       <Header />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -97,15 +97,15 @@ const MedicalHistoryPage: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-gray-900">Histórico Médico</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-dark-100">Histórico Médico</h1>
+          <p className="text-gray-600 dark:text-dark-300 mt-2">
             Visualize e gerencie seu histórico médico digital
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardHeader 
                 title="Registros Médicos" 
                 action={
@@ -124,17 +124,17 @@ const MedicalHistoryPage: React.FC = () => {
                   <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-6 p-4 bg-gray-50 rounded-lg border"
+                    className="mb-6 p-4 bg-gray-50 dark:bg-dark-700 rounded-lg border border-gray-200 dark:border-dark-600"
                   >
                     <h3 className="text-lg font-semibold mb-4">Adicionar Novo Registro</h3>
                     <div className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-1">Tipo</label>
                           <select
                             value={newRecord.type}
                             onChange={(e) => setNewRecord({...newRecord, type: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-100"
                           >
                             <option value="consultation">Consulta</option>
                             <option value="exam">Exame</option>
@@ -142,12 +142,12 @@ const MedicalHistoryPage: React.FC = () => {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Data</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-1">Data</label>
                           <input
                             type="date"
                             value={newRecord.date}
                             onChange={(e) => setNewRecord({...newRecord, date: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-100"
                           />
                         </div>
                       </div>
@@ -173,23 +173,23 @@ const MedicalHistoryPage: React.FC = () => {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Médico</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-1">Médico</label>
                           <input
                             type="text"
                             value={newRecord.doctor}
                             onChange={(e) => setNewRecord({...newRecord, doctor: e.target.value})}
                             placeholder="Nome do médico"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-100"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Hospital/Clínica</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-1">Hospital/Clínica</label>
                           <input
                             type="text"
                             value={newRecord.hospital}
                             onChange={(e) => setNewRecord({...newRecord, hospital: e.target.value})}
                             placeholder="Nome do local"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-100"
                           />
                         </div>
                       </div>
@@ -237,7 +237,7 @@ const MedicalHistoryPage: React.FC = () => {
                           key={record.id}
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
+                          className="p-6 bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 rounded-lg hover:shadow-md transition-shadow"
                         >
                           <div className="flex items-start space-x-4">
                             <div className={`p-3 rounded-lg ${getRecordColor(record.type)}`}>
@@ -245,7 +245,7 @@ const MedicalHistoryPage: React.FC = () => {
                             </div>
                             <div className="flex-1">
                               <div className="flex items-center justify-between mb-2">
-                                <h3 className="text-lg font-semibold text-gray-900">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-dark-100">
                                   {record.title}
                                 </h3>
                                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -283,27 +283,27 @@ const MedicalHistoryPage: React.FC = () => {
           </div>
 
           <div className="space-y-6">
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardHeader title="Resumo" />
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Consultas realizadas</span>
-                    <span className="font-medium">{medicalRecords.filter(r => r.type === 'consultation').length}</span>
+                    <span className="text-sm text-gray-600 dark:text-dark-400">Consultas realizadas</span>
+                    <span className="font-medium text-gray-900 dark:text-dark-100">{medicalRecords.filter(r => r.type === 'consultation').length}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Exames realizados</span>
-                    <span className="font-medium">{medicalRecords.filter(r => r.type === 'exam').length}</span>
+                    <span className="text-sm text-gray-600 dark:text-dark-400">Exames realizados</span>
+                    <span className="font-medium text-gray-900 dark:text-dark-100">{medicalRecords.filter(r => r.type === 'exam').length}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Prescrições</span>
-                    <span className="font-medium">{medicalRecords.filter(r => r.type === 'prescription').length}</span>
+                    <span className="text-sm text-gray-600 dark:text-dark-400">Prescrições</span>
+                    <span className="font-medium text-gray-900 dark:text-dark-100">{medicalRecords.filter(r => r.type === 'prescription').length}</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardHeader title="Ações Rápidas" />
               <CardContent>
                 <div className="space-y-3">

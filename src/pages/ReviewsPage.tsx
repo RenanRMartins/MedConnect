@@ -76,7 +76,7 @@ const ReviewsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-dark-900">
       <Header />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -86,15 +86,15 @@ const ReviewsPage: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-gray-900">Avaliações</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-dark-100">Avaliações</h1>
+          <p className="text-gray-600 dark:text-dark-300 mt-2">
             Avalie os profissionais e veja as avaliações de outros pacientes
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardHeader 
                 title="Minhas Avaliações" 
                 action={
@@ -112,17 +112,17 @@ const ReviewsPage: React.FC = () => {
                   <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-6 p-4 bg-gray-50 rounded-lg border"
+                    className="mb-6 p-4 bg-gray-50 dark:bg-dark-700 rounded-lg border border-gray-200 dark:border-dark-600"
                   >
                     <h3 className="text-lg font-semibold mb-4">Avaliar Profissional</h3>
                     <div className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Profissional</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-1">Profissional</label>
                           <select
                             value={newReview.doctor}
                             onChange={(e) => setNewReview({...newReview, doctor: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-100"
                           >
                             <option value="">Selecione um profissional</option>
                             <option value="Dr. João Silva">Dr. João Silva - Cardiologia</option>
@@ -131,13 +131,13 @@ const ReviewsPage: React.FC = () => {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Consulta</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-1">Consulta</label>
                           <input
                             type="text"
                             value={newReview.appointment}
                             onChange={(e) => setNewReview({...newReview, appointment: e.target.value})}
                             placeholder="Ex: Consulta de Cardiologia"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-100"
                           />
                         </div>
                       </div>
@@ -194,10 +194,10 @@ const ReviewsPage: React.FC = () => {
                   {reviews.length === 0 ? (
                     <div className="text-center py-12">
                       <Star className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-dark-100 mb-2">
                         Nenhuma avaliação encontrada
                       </h3>
-                      <p className="text-gray-500 mb-6">
+                      <p className="text-gray-500 dark:text-dark-400 mb-6">
                         Suas avaliações aparecerão aqui após as consultas
                       </p>
                       <Button 
@@ -214,7 +214,7 @@ const ReviewsPage: React.FC = () => {
                         key={review.id}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
+                        className="p-6 bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 rounded-lg hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-start space-x-4">
                           <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
@@ -222,7 +222,7 @@ const ReviewsPage: React.FC = () => {
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center justify-between mb-2">
-                              <h3 className="text-lg font-semibold text-gray-900">
+                              <h3 className="text-lg font-semibold text-gray-900 dark:text-dark-100">
                                 {review.doctor}
                               </h3>
                               <div className="flex items-center space-x-1">
@@ -254,25 +254,25 @@ const ReviewsPage: React.FC = () => {
           </div>
 
           <div className="space-y-6">
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardHeader title="Avaliações Pendentes" />
               <CardContent>
                 {pendingReviews.length === 0 ? (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">Nenhuma avaliação pendente</p>
+                    <p className="text-gray-500 dark:text-dark-400">Nenhuma avaliação pendente</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {pendingReviews.map((review) => (
-                      <div key={review.id} className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <div key={review.id} className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-                            <Star className="w-5 h-5 text-yellow-600" />
+                          <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center">
+                            <Star className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                           </div>
                           <div className="flex-1">
-                            <h4 className="font-medium text-gray-900">{review.doctor}</h4>
-                            <p className="text-sm text-gray-600">{review.specialty}</p>
-                            <p className="text-xs text-gray-500">{new Date(review.date).toLocaleDateString('pt-BR')}</p>
+                            <h4 className="font-medium text-gray-900 dark:text-dark-100">{review.doctor}</h4>
+                            <p className="text-sm text-gray-600 dark:text-dark-300">{review.specialty}</p>
+                            <p className="text-xs text-gray-500 dark:text-dark-400">{new Date(review.date).toLocaleDateString('pt-BR')}</p>
                           </div>
                           <Button 
                             size="sm"
@@ -289,7 +289,7 @@ const ReviewsPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardHeader title="Ações Rápidas" />
               <CardContent>
                 <div className="space-y-3">

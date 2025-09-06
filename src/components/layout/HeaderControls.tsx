@@ -22,7 +22,7 @@ const HeaderControls: React.FC = () => {
         <select
           value={selectedRole}
           onChange={(e) => setSelectedRole(e.target.value as UserRole)}
-          className="appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          className="appearance-none bg-white dark:bg-dark-800 border border-gray-300 dark:border-dark-600 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-gray-700 dark:text-dark-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
         >
           {roleOptions.map((option) => {
             const Icon = option.icon;
@@ -41,7 +41,7 @@ const HeaderControls: React.FC = () => {
       {/* Toggle do Modo Escuro */}
       <button
         onClick={toggleTheme}
-        className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+        className="relative p-2 text-gray-600 dark:text-dark-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-700"
         title={`Alternar para modo ${theme === 'light' ? 'escuro' : 'claro'}`}
       >
         <motion.div
@@ -58,7 +58,7 @@ const HeaderControls: React.FC = () => {
       </button>
 
       {/* Notificações */}
-      <button className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+      <button className="relative p-2 text-gray-600 dark:text-dark-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-700">
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4.5 19.5a1.5 1.5 0 01-1.5-1.5V6a1.5 1.5 0 011.5-1.5h15A1.5 1.5 0 0121 6v12a1.5 1.5 0 01-1.5 1.5h-15z" />
         </svg>
@@ -71,9 +71,9 @@ const HeaderControls: React.FC = () => {
         appearance={{
           elements: {
             avatarBox: "w-8 h-8",
-            userButtonPopoverCard: "shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800",
-            userButtonPopoverActionButton: "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700",
-            userButtonPopoverActionButtonText: "text-gray-700 dark:text-gray-300",
+            userButtonPopoverCard: "shadow-lg border border-gray-200 dark:border-dark-700 bg-white dark:bg-dark-800",
+            userButtonPopoverActionButton: "text-gray-700 dark:text-dark-200 hover:bg-gray-100 dark:hover:bg-dark-700",
+            userButtonPopoverActionButtonText: "text-gray-700 dark:text-dark-200",
             userButtonPopoverFooter: "hidden",
           }
         }}

@@ -208,7 +208,7 @@ const NewAppointmentPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-dark-900">
       <Header />
       
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -228,8 +228,8 @@ const NewAppointmentPage: React.FC = () => {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Agendar Consulta</h1>
-              <p className="text-gray-600 mt-2">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-dark-100">Agendar Consulta</h1>
+              <p className="text-gray-600 dark:text-dark-300 mt-2">
                 Preencha as informações para agendar sua consulta
               </p>
             </div>
@@ -265,7 +265,7 @@ const NewAppointmentPage: React.FC = () => {
         </motion.div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Card>
+          <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
             <CardHeader title={`Passo ${step}: ${steps[step - 1].title}`} />
             <CardContent>
               {isLoading ? (
@@ -293,17 +293,17 @@ const NewAppointmentPage: React.FC = () => {
                             }}
                             className={`p-4 border rounded-lg text-left transition-all duration-200 ${
                               selectedSpecialty === specialty.name
-                                ? 'border-primary-500 bg-primary-50'
-                                : 'border-gray-200 hover:border-gray-300'
+                                ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30'
+                                : 'border-gray-200 dark:border-dark-700 hover:border-gray-300 dark:hover:border-dark-600'
                             }`}
                           >
                             <div className="flex items-center space-x-3">
                               <span className="text-2xl">{specialty.icon}</span>
                               <div>
-                                <h3 className="font-medium text-gray-900">
+                                <h3 className="font-medium text-gray-900 dark:text-dark-100">
                                   {specialty.name}
                                 </h3>
-                                <p className="text-sm text-gray-500">
+                                <p className="text-sm text-gray-500 dark:text-dark-400">
                                   {specialty.description}
                                 </p>
                               </div>

@@ -125,7 +125,7 @@ const SupportPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-dark-900">
       <Header />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -135,15 +135,15 @@ const SupportPage: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-gray-900">Suporte</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-dark-100">Suporte</h1>
+          <p className="text-gray-600 dark:text-dark-300 mt-2">
             Estamos aqui para ajudar você com qualquer dúvida
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardHeader 
                 title="Chat de Suporte" 
                 action={
@@ -162,27 +162,27 @@ const SupportPage: React.FC = () => {
                   <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-6 p-4 bg-gray-50 rounded-lg border"
+                    className="mb-6 p-4 bg-white dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600"
                   >
-                    <h3 className="text-lg font-semibold mb-4">Criar Ticket de Suporte</h3>
+                    <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-dark-100">Criar Ticket de Suporte</h3>
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Assunto</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-1">Assunto</label>
                         <input
                           type="text"
                           value={newTicket.subject}
                           onChange={(e) => setNewTicket({...newTicket, subject: e.target.value})}
                           placeholder="Descreva brevemente o problema"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-100"
                         />
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Prioridade</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-1">Prioridade</label>
                           <select
                             value={newTicket.priority}
                             onChange={(e) => setNewTicket({...newTicket, priority: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-100"
                           >
                             <option value="low">Baixa</option>
                             <option value="medium">Média</option>
@@ -190,11 +190,11 @@ const SupportPage: React.FC = () => {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-1">Categoria</label>
                           <select
                             value={newTicket.category}
                             onChange={(e) => setNewTicket({...newTicket, category: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-100"
                           >
                             <option value="general">Geral</option>
                             <option value="technical">Técnico</option>
@@ -204,13 +204,13 @@ const SupportPage: React.FC = () => {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-1">Descrição</label>
                         <textarea
                           value={newTicket.description}
                           onChange={(e) => setNewTicket({...newTicket, description: e.target.value})}
                           placeholder="Descreva detalhadamente o problema ou dúvida..."
                           rows={4}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-100"
                         />
                       </div>
                       <div className="flex space-x-3">
@@ -241,7 +241,7 @@ const SupportPage: React.FC = () => {
                         <div
                           className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                             message.isSupport
-                              ? 'bg-gray-100 text-gray-900'
+                              ? 'bg-gray-100 dark:bg-dark-700 text-gray-900 dark:text-dark-100'
                               : 'bg-primary-600 text-white'
                           }`}
                         >
@@ -258,7 +258,7 @@ const SupportPage: React.FC = () => {
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       placeholder="Digite sua mensagem..."
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="flex-1 px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-100"
                       onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                     />
                     <Button 
@@ -272,14 +272,14 @@ const SupportPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className="mt-6">
+            <Card className="mt-6 bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardHeader title="Meus Tickets" />
               <CardContent>
                 <div className="space-y-4">
                   {tickets.map((ticket) => (
-                    <div key={ticket.id} className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                    <div key={ticket.id} className="p-4 border border-gray-200 dark:border-dark-700 rounded-lg hover:shadow-md transition-shadow bg-white dark:bg-dark-800">
                       <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-medium text-gray-900">{ticket.subject}</h3>
+                        <h3 className="font-medium text-gray-900 dark:text-dark-100">{ticket.subject}</h3>
                         <div className="flex space-x-2">
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(ticket.status)}`}>
                             {ticket.status === 'open' ? 'Aberto' : ticket.status === 'in-progress' ? 'Em Andamento' : 'Resolvido'}
@@ -289,8 +289,8 @@ const SupportPage: React.FC = () => {
                           </span>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-600 mb-2">{ticket.lastMessage}</p>
-                      <p className="text-xs text-gray-500">Criado em {new Date(ticket.createdAt).toLocaleDateString('pt-BR')}</p>
+                      <p className="text-sm text-gray-600 dark:text-dark-300 mb-2">{ticket.lastMessage}</p>
+                      <p className="text-xs text-gray-500 dark:text-dark-400">Criado em {new Date(ticket.createdAt).toLocaleDateString('pt-BR')}</p>
                     </div>
                   ))}
                 </div>
@@ -299,46 +299,46 @@ const SupportPage: React.FC = () => {
           </div>
 
           <div className="space-y-6">
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardHeader title="Contato" />
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
-                    <Phone className="w-5 h-5 text-primary-600" />
+                    <Phone className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                     <div>
-                      <p className="font-medium">Telefone</p>
-                      <p className="text-sm text-gray-500">(11) 9999-9999</p>
+                      <p className="font-medium text-gray-900 dark:text-dark-100">Telefone</p>
+                      <p className="text-sm text-gray-600 dark:text-dark-300">(11) 9999-9999</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Mail className="w-5 h-5 text-primary-600" />
+                    <Mail className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                     <div>
-                      <p className="font-medium">E-mail</p>
-                      <p className="text-sm text-gray-500">suporte@medconnect.com</p>
+                      <p className="font-medium text-gray-900 dark:text-dark-100">E-mail</p>
+                      <p className="text-sm text-gray-600 dark:text-dark-300">suporte@medconnect.com</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Clock className="w-5 h-5 text-primary-600" />
+                    <Clock className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                     <div>
-                      <p className="font-medium">Horário</p>
-                      <p className="text-sm text-gray-500">24/7</p>
+                      <p className="font-medium text-gray-900 dark:text-dark-100">Horário</p>
+                      <p className="text-sm text-gray-600 dark:text-dark-300">24/7</p>
                     </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-white dark:bg-dark-800 border-gray-200 dark:border-dark-700">
               <CardHeader title="FAQ" />
               <CardContent>
                 <div className="space-y-3">
                   {faqItems.map((item, index) => (
-                    <div key={index} className="border-b border-gray-200 pb-3 last:border-b-0">
+                    <div key={index} className="border-b border-gray-200 dark:border-dark-700 pb-3 last:border-b-0">
                       <button
                         onClick={() => alert(item.answer)}
-                        className="text-left w-full hover:text-primary-600 transition-colors"
+                        className="text-left w-full hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                       >
-                        <p className="font-medium text-sm">{item.question}</p>
+                        <p className="font-medium text-sm text-gray-900 dark:text-dark-100">{item.question}</p>
                       </button>
                     </div>
                   ))}
