@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useUser } from '@clerk/clerk-react';
+import { useAuthStore } from '@/stores/authStore';
 import { useAppointmentStore } from '@/stores/appointmentStore';
 import { DashboardStats, Appointment } from '@/types';
 import Header from '@/components/layout/Header';
@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 
 const DoctorDashboard: React.FC = () => {
-  const { user } = useUser();
+  const { user } = useAuthStore();
   const { 
     upcomingAppointments, 
     pastAppointments, 

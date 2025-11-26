@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { UserButton } from '@clerk/clerk-react';
+import { Link } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useUserRoleContext } from '@/contexts/UserRoleContext';
+import { useAuthStore } from '@/stores/authStore';
 import { UserRole } from '@/hooks/useUserRole';
-import { Sun, Moon, User, Stethoscope, Settings } from 'lucide-react';
+import { Sun, Moon, User, Stethoscope, Settings, LogOut } from 'lucide-react';
+import NotificationButton from './NotificationButton';
 
 const HeaderControls: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const { selectedRole, setSelectedRole } = useUserRoleContext();
+  const { user, logout } = useAuthStore();
+  const [showMenu, setShowMenu] = useState(false);
 
   const roleOptions: { value: UserRole; label: string; icon: React.ElementType }[] = [
     { value: 'patient', label: 'Paciente', icon: User },
@@ -58,26 +62,61 @@ const HeaderControls: React.FC = () => {
       </button>
 
       {/* Notificações */}
-      <button className="relative p-2 text-gray-600 dark:text-dark-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-700">
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4.5 19.5a1.5 1.5 0 01-1.5-1.5V6a1.5 1.5 0 011.5-1.5h15A1.5 1.5 0 0121 6v12a1.5 1.5 0 01-1.5 1.5h-15z" />
-        </svg>
-        <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-      </button>
+      <NotificationButton />
 
       {/* Perfil do Usuário */}
-      <UserButton
-        afterSignOutUrl="/"
-        appearance={{
-          elements: {
-            avatarBox: "w-8 h-8",
-            userButtonPopoverCard: "shadow-lg border border-gray-200 dark:border-dark-700 bg-white dark:bg-dark-800",
-            userButtonPopoverActionButton: "text-gray-700 dark:text-dark-200 hover:bg-gray-100 dark:hover:bg-dark-700",
-            userButtonPopoverActionButtonText: "text-gray-700 dark:text-dark-200",
-            userButtonPopoverFooter: "hidden",
-          }
-        }}
-      />
+      <div className="relative">
+        <button
+          onClick={() => setShowMenu(!showMenu)}
+          className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-700 transition-colors"
+        >
+          <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+            {user?.name?.charAt(0).toUpperCase() || 'U'}
+          </div>
+        </button>
+        
+        {showMenu && (
+          <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-dark-800 rounded-lg shadow-lg border border-gray-200 dark:border-dark-700 py-2 z-50">
+            <div className="px-4 py-2 border-b border-gray-200 dark:border-dark-700">
+              <p className="text-sm font-medium text-gray-900 dark:text-dark-100">
+                {user?.name || 'Usuário'}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-dark-400 truncate">
+                {user?.email}
+              </p>
+            </div>
+            <Link
+              to="/profile"
+              className="block px-4 py-2 text-sm text-gray-700 dark:text-dark-200 hover:bg-gray-100 dark:hover:bg-dark-700"
+              onClick={() => setShowMenu(false)}
+            >
+              <User className="w-4 h-4 inline mr-2" />
+              Perfil
+            </Link>
+            <Link
+              to="/settings"
+              className="block px-4 py-2 text-sm text-gray-700 dark:text-dark-200 hover:bg-gray-100 dark:hover:bg-dark-700"
+              onClick={() => setShowMenu(false)}
+            >
+              <Settings className="w-4 h-4 inline mr-2" />
+              Configurações
+            </Link>
+            <button
+              onClick={async (e) => {
+                e.preventDefault();
+                setShowMenu(false);
+                // Aguardar um pouco para o menu fechar
+                await new Promise(resolve => setTimeout(resolve, 100));
+                await logout();
+              }}
+              className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-dark-700"
+            >
+              <LogOut className="w-4 h-4 inline mr-2" />
+              Sair
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

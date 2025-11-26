@@ -165,12 +165,6 @@ const NewAppointmentPage: React.FC = () => {
   }, [selectedDate, selectedProfessional]);
 
   const onSubmit = async (data: AppointmentForm) => {
-    console.log('Form submitted with data:', data);
-    console.log('Selected professional:', selectedProfessional);
-    console.log('Selected hospital:', selectedHospital);
-    console.log('Selected date:', selectedDate);
-    console.log('Selected time:', selectedTime);
-    
     setIsLoading(true);
     
     const success = await createAppointment({
@@ -182,7 +176,10 @@ const NewAppointmentPage: React.FC = () => {
     });
 
     if (success) {
-      navigate('/appointments');
+      // Aguardar um pouco antes de navegar para garantir que a consulta foi salva
+      setTimeout(() => {
+        navigate('/appointments');
+      }, 1000);
     }
     
     setIsLoading(false);

@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAppointmentStore } from '@/stores/appointmentStore';
 import Header from '@/components/layout/Header';
 import Card, { CardHeader, CardContent } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { Appointment } from '@/types';
 import {
   Calendar,
   Plus,
@@ -26,11 +29,21 @@ const AppointmentsPage: React.FC = () => {
     upcomingAppointments,
     pastAppointments,
     fetchAppointments,
+    updateAppointment,
+    cancelAppointment,
     isLoading,
   } = useAppointmentStore();
 
   const [activeTab, setActiveTab] = React.useState<'all' | 'upcoming' | 'past'>('all');
   const [searchTerm, setSearchTerm] = React.useState('');
+  const [editingAppointment, setEditingAppointment] = React.useState<Appointment | null>(null);
+  const [cancellingAppointment, setCancellingAppointment] = React.useState<Appointment | null>(null);
+  const [cancelReason, setCancelReason] = React.useState('');
+  const [editFormData, setEditFormData] = React.useState({
+    date: '',
+    time: '',
+    notes: '',
+  });
 
   useEffect(() => {
     fetchAppointments();
@@ -326,25 +339,35 @@ const AppointmentsPage: React.FC = () => {
                             </Button>
                             
                             {(appointment.status === 'scheduled' || appointment.status === 'confirmed') && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => console.log('Edit appointment:', appointment)}
-                              >
-                                <Edit className="w-4 h-4" />
-                              </Button>
-                            )}
-                            
-                            {(appointment.status === 'scheduled' || appointment.status === 'confirmed') && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => console.log('Cancel appointment:', appointment)}
-                                className="text-red-600 hover:text-red-700"
-                              >
-                                <X className="w-4 h-4" />
-                              </Button>
-                            )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setEditingAppointment(appointment);
+                                setEditFormData({
+                                  date: appointment.date,
+                                  time: appointment.startTime,
+                                  notes: appointment.notes || '',
+                                });
+                              }}
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                          )}
+                          
+                          {(appointment.status === 'scheduled' || appointment.status === 'confirmed') && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setCancellingAppointment(appointment);
+                                setCancelReason('');
+                              }}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          )}
                           </div>
                         </div>
                       </motion.div>
@@ -355,6 +378,172 @@ const AppointmentsPage: React.FC = () => {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Modal Editar Consulta */}
+        {editingAppointment && createPortal(
+          <AnimatePresence>
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4"
+              style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
+              onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                  setEditingAppointment(null);
+                }
+              }}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="bg-white dark:bg-dark-800 rounded-lg p-6 max-w-md w-full shadow-xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-dark-100">Editar Consulta</h3>
+                <button
+                  onClick={() => setEditingAppointment(null)}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (editingAppointment) {
+                    const success = await updateAppointment(editingAppointment.id, {
+                      date: editFormData.date,
+                      time: editFormData.time,
+                      notes: editFormData.notes,
+                    });
+                    if (success) {
+                      setEditingAppointment(null);
+                      fetchAppointments();
+                    }
+                  }
+                }}
+                className="space-y-4"
+              >
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-dark-300">
+                    Data
+                  </label>
+                  <Input
+                    type="date"
+                    value={editFormData.date}
+                    onChange={(e) => setEditFormData({ ...editFormData, date: e.target.value })}
+                    required
+                    className="w-full"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-dark-300">
+                    Horário
+                  </label>
+                  <Input
+                    type="time"
+                    value={editFormData.time}
+                    onChange={(e) => setEditFormData({ ...editFormData, time: e.target.value })}
+                    required
+                    className="w-full"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-dark-300">
+                    Observações
+                  </label>
+                  <textarea
+                    value={editFormData.notes}
+                    onChange={(e) => setEditFormData({ ...editFormData, notes: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    rows={3}
+                    placeholder="Adicione observações sobre a consulta..."
+                  />
+                </div>
+                <div className="flex gap-4 pt-4">
+                  <Button 
+                    type="submit" 
+                    className="bg-primary-600 hover:bg-primary-700 text-white flex-1"
+                  >
+                    Salvar Alterações
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setEditingAppointment(null)}
+                    className="flex-1"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              </form>
+              </motion.div>
+            </div>
+          </AnimatePresence>,
+          document.body
+        )}
+
+        {/* Modal Cancelar Consulta */}
+        {cancellingAppointment && createPortal(
+          <AnimatePresence>
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white dark:bg-dark-800 rounded-lg p-6 max-w-md w-full mx-4"
+            >
+              <h3 className="text-xl font-bold mb-4 text-red-600">Cancelar Consulta</h3>
+              <p className="text-gray-600 dark:text-dark-400 mb-4">
+                Tem certeza que deseja cancelar esta consulta? Esta ação não pode ser desfeita.
+              </p>
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (cancellingAppointment) {
+                    const success = await cancelAppointment(cancellingAppointment.id, cancelReason);
+                    if (success) {
+                      setCancellingAppointment(null);
+                      setCancelReason('');
+                      fetchAppointments();
+                    }
+                  }
+                }}
+                className="space-y-4"
+              >
+                <div>
+                  <label className="block text-sm font-medium mb-2">Motivo do Cancelamento (opcional)</label>
+                  <textarea
+                    value={cancelReason}
+                    onChange={(e) => setCancelReason(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-800"
+                    rows={3}
+                    placeholder="Digite o motivo do cancelamento..."
+                  />
+                </div>
+                <div className="flex gap-4">
+                  <Button
+                    type="submit"
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    Confirmar Cancelamento
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setCancellingAppointment(null);
+                      setCancelReason('');
+                    }}
+                  >
+                    Voltar
+                  </Button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+          </AnimatePresence>,
+          document.body
+        )}
       </main>
     </div>
   );

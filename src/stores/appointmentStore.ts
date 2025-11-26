@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { Appointment, AppointmentForm, AppointmentFilters, TimeSlot } from '@/types';
-import { apiService, endpoints } from '@/services/api';
 import toast from 'react-hot-toast';
 
 interface AppointmentState {
@@ -49,39 +48,72 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
+      const { appointmentService } = await import('@/services/firebaseService');
+      const { useAuthStore } = await import('./authStore');
+      const { user } = useAuthStore.getState();
+      
+      if (!user) {
+        throw new Error('Usuário não autenticado');
+      }
+
       const currentFilters = filters || get().filters;
-      const response = await apiService.get<Appointment[]>(
-        endpoints.appointments.list,
-        currentFilters
+      const role = user.role;
+      
+      // Garantir que temos o ID correto do usuário
+      const { firebaseUser } = useAuthStore.getState();
+      const userId = user.id || firebaseUser?.uid;
+      if (!userId) {
+        throw new Error('ID do usuário não encontrado');
+      }
+      
+      // Construir filtros para Firestore
+      const firestoreFilters: any = {
+        dateFrom: currentFilters.dateFrom,
+        dateTo: currentFilters.dateTo,
+        status: currentFilters.status,
+      };
+      
+      if (role === 'patient') {
+        firestoreFilters.patientId = userId;
+      } else if (role === 'professional') {
+        firestoreFilters.professionalId = userId;
+      }
+      
+      if (currentFilters.professionalId) {
+        firestoreFilters.professionalId = currentFilters.professionalId;
+      }
+      
+      if (currentFilters.hospitalId) {
+        // Firestore não suporta múltiplos where com AND facilmente
+        // Vamos filtrar depois
+      }
+
+      const appointments = await appointmentService.getAppointments(firestoreFilters);
+      
+      // Filtrar por hospital se necessário
+      let filteredAppointments = appointments;
+      if (currentFilters.hospitalId) {
+        filteredAppointments = appointments.filter(apt => apt.hospitalId === currentFilters.hospitalId);
+      }
+      
+      const now = new Date();
+      
+      const upcoming = filteredAppointments.filter(apt => 
+        new Date(apt.date + 'T' + apt.startTime) > now
+      );
+      const past = filteredAppointments.filter(apt => 
+        new Date(apt.date + 'T' + apt.startTime) <= now
       );
 
-      if (response.success) {
-        const appointments = response.data;
-        const now = new Date();
-        
-        const upcoming = appointments.filter(apt => 
-          new Date(apt.date + 'T' + apt.startTime) > now
-        );
-        const past = appointments.filter(apt => 
-          new Date(apt.date + 'T' + apt.startTime) <= now
-        );
-
-        set({
-          appointments,
-          upcomingAppointments: upcoming,
-          pastAppointments: past,
-          isLoading: false,
-          error: null,
-        });
-      } else {
-        set({
-          error: response.message || 'Erro ao carregar consultas',
-          isLoading: false,
-        });
-        toast.error(response.message || 'Erro ao carregar consultas');
-      }
+      set({
+        appointments: filteredAppointments,
+        upcomingAppointments: upcoming,
+        pastAppointments: past,
+        isLoading: false,
+        error: null,
+      });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Erro de conexão';
+      const errorMessage = error.message || 'Erro ao carregar consultas';
       set({
         error: errorMessage,
         isLoading: false,
@@ -94,26 +126,26 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await apiService.get<Appointment[]>(
-        endpoints.appointments.list,
-        { status: ['scheduled', 'confirmed'], upcoming: true }
+      const { appointmentService } = await import('@/services/firebaseService');
+      const { useAuthStore } = await import('./authStore');
+      const { user } = useAuthStore.getState();
+      
+      if (!user) {
+        throw new Error('Usuário não autenticado');
+      }
+
+      const appointments = await appointmentService.getUpcomingAppointments(
+        user.id,
+        user.role as 'patient' | 'professional'
       );
 
-      if (response.success) {
-        set({
-          upcomingAppointments: response.data,
-          isLoading: false,
-          error: null,
-        });
-      } else {
-        set({
-          error: response.message || 'Erro ao carregar próximas consultas',
-          isLoading: false,
-        });
-        toast.error(response.message || 'Erro ao carregar próximas consultas');
-      }
+      set({
+        upcomingAppointments: appointments,
+        isLoading: false,
+        error: null,
+      });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Erro de conexão';
+      const errorMessage = error.message || 'Erro ao carregar próximas consultas';
       set({
         error: errorMessage,
         isLoading: false,
@@ -126,26 +158,26 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await apiService.get<Appointment[]>(
-        endpoints.appointments.list,
-        { status: ['completed'], past: true }
+      const { appointmentService } = await import('@/services/firebaseService');
+      const { useAuthStore } = await import('./authStore');
+      const { user } = useAuthStore.getState();
+      
+      if (!user) {
+        throw new Error('Usuário não autenticado');
+      }
+
+      const appointments = await appointmentService.getPastAppointments(
+        user.id,
+        user.role as 'patient' | 'professional'
       );
 
-      if (response.success) {
-        set({
-          pastAppointments: response.data,
-          isLoading: false,
-          error: null,
-        });
-      } else {
-        set({
-          error: response.message || 'Erro ao carregar consultas passadas',
-          isLoading: false,
-        });
-        toast.error(response.message || 'Erro ao carregar consultas passadas');
-      }
+      set({
+        pastAppointments: appointments,
+        isLoading: false,
+        error: null,
+      });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Erro de conexão';
+      const errorMessage = error.message || 'Erro ao carregar consultas passadas';
       set({
         error: errorMessage,
         isLoading: false,
@@ -190,27 +222,26 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await apiService.get<Appointment>(
-        endpoints.appointments.get(id)
-      );
+      const { appointmentService } = await import('@/services/firebaseService');
+      const appointment = await appointmentService.getAppointment(id);
 
-      if (response.success) {
+      if (appointment) {
         set({
-          selectedAppointment: response.data,
+          selectedAppointment: appointment,
           isLoading: false,
           error: null,
         });
-        return response.data;
+        return appointment;
       } else {
         set({
-          error: response.message || 'Erro ao carregar consulta',
+          error: 'Consulta não encontrada',
           isLoading: false,
         });
-        toast.error(response.message || 'Erro ao carregar consulta');
+        toast.error('Consulta não encontrada');
         return null;
       }
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Erro de conexão';
+      const errorMessage = error.message || 'Erro ao carregar consulta';
       set({
         error: errorMessage,
         isLoading: false,
@@ -224,27 +255,39 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const { appointmentService } = await import('@/services/firebaseService');
+      const { useAuthStore } = await import('./authStore');
+      const { user, firebaseUser } = useAuthStore.getState();
+      
+      if (!user) {
+        throw new Error('Usuário não autenticado');
+      }
 
-      // Criar appointment simulado
-      const newAppointment: Appointment = {
-        id: `apt_${Date.now()}`,
-        patientId: 'patient_1',
+      // Garantir que temos o ID correto do usuário
+      const patientId = user.id || firebaseUser?.uid;
+      if (!patientId) {
+        throw new Error('ID do usuário não encontrado');
+      }
+
+      // Calcular horário de término (1 hora após início)
+      const [hours, minutes] = appointmentData.time.split(':').map(Number);
+      const endTime = `${String((hours + 1) % 24).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+
+      const newAppointment = await appointmentService.createAppointment({
+        patientId: patientId,
         professionalId: appointmentData.professionalId,
         specialty: appointmentData.specialty,
         hospitalId: appointmentData.hospitalId,
         date: appointmentData.date,
         startTime: appointmentData.time,
-        endTime: appointmentData.time.split(':').map((v, i) => i === 0 ? String(parseInt(v) + 1) : v).join(':'),
+        endTime: endTime,
         status: 'scheduled',
         type: appointmentData.type,
         notes: appointmentData.notes,
         symptoms: appointmentData.symptoms,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
+      });
       
+      // Adicionar ao estado local imediatamente
       set(state => ({
         appointments: [newAppointment, ...state.appointments],
         upcomingAppointments: [newAppointment, ...state.upcomingAppointments],
@@ -252,10 +295,21 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
         error: null,
       }));
 
+      // Recarregar do Firestore para garantir sincronização
+      setTimeout(async () => {
+        try {
+          await get().fetchAppointments();
+          await get().fetchUpcomingAppointments();
+          await get().fetchPastAppointments();
+        } catch (refreshError) {
+          // Silenciosamente ignorar erro de refresh
+        }
+      }, 1500);
+
       toast.success('Consulta agendada com sucesso!');
       return true;
     } catch (error: any) {
-      const errorMessage = 'Erro ao agendar consulta. Tente novamente.';
+      const errorMessage = error.message || 'Erro ao agendar consulta. Tente novamente.';
       set({
         error: errorMessage,
         isLoading: false,
@@ -269,41 +323,44 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await apiService.put<Appointment>(
-        endpoints.appointments.update(id),
-        appointmentData
-      );
-
-      if (response.success) {
-        const updatedAppointment = response.data;
-        
-        set(state => ({
-          appointments: state.appointments.map(apt => 
-            apt.id === id ? updatedAppointment : apt
-          ),
-          upcomingAppointments: state.upcomingAppointments.map(apt => 
-            apt.id === id ? updatedAppointment : apt
-          ),
-          pastAppointments: state.pastAppointments.map(apt => 
-            apt.id === id ? updatedAppointment : apt
-          ),
-          selectedAppointment: state.selectedAppointment?.id === id ? updatedAppointment : state.selectedAppointment,
-          isLoading: false,
-          error: null,
-        }));
-
-        toast.success('Consulta atualizada com sucesso!');
-        return true;
-      } else {
-        set({
-          error: response.message || 'Erro ao atualizar consulta',
-          isLoading: false,
-        });
-        toast.error(response.message || 'Erro ao atualizar consulta');
-        return false;
+      const { appointmentService } = await import('@/services/firebaseService');
+      
+      // Converter AppointmentForm para formato de Appointment
+      const updates: any = {};
+      if (appointmentData.date) updates.date = appointmentData.date;
+      if (appointmentData.time) {
+        updates.startTime = appointmentData.time;
+        // Calcular endTime
+        const [hours, minutes] = appointmentData.time.split(':').map(Number);
+        updates.endTime = `${String((hours + 1) % 24).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
       }
+      if (appointmentData.notes !== undefined) updates.notes = appointmentData.notes;
+      if (appointmentData.symptoms !== undefined) updates.symptoms = appointmentData.symptoms;
+      if (appointmentData.type) updates.type = appointmentData.type;
+      if (appointmentData.specialty) updates.specialty = appointmentData.specialty;
+      if (appointmentData.hospitalId) updates.hospitalId = appointmentData.hospitalId;
+
+      const updatedAppointment = await appointmentService.updateAppointment(id, updates);
+      
+      set(state => ({
+        appointments: state.appointments.map(apt => 
+          apt.id === id ? updatedAppointment : apt
+        ),
+        upcomingAppointments: state.upcomingAppointments.map(apt => 
+          apt.id === id ? updatedAppointment : apt
+        ),
+        pastAppointments: state.pastAppointments.map(apt => 
+          apt.id === id ? updatedAppointment : apt
+        ),
+        selectedAppointment: state.selectedAppointment?.id === id ? updatedAppointment : state.selectedAppointment,
+        isLoading: false,
+        error: null,
+      }));
+
+      toast.success('Consulta atualizada com sucesso!');
+      return true;
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Erro de conexão';
+      const errorMessage = error.message || 'Erro ao atualizar consulta';
       set({
         error: errorMessage,
         isLoading: false,
@@ -317,36 +374,32 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await apiService.post<Appointment>(
-        endpoints.appointments.cancel(id),
-        { reason }
-      );
-
-      if (response.success) {
-        const cancelledAppointment = response.data;
-        
-        set(state => ({
-          appointments: state.appointments.map(apt => 
-            apt.id === id ? cancelledAppointment : apt
-          ),
-          upcomingAppointments: state.upcomingAppointments.filter(apt => apt.id !== id),
-          selectedAppointment: state.selectedAppointment?.id === id ? cancelledAppointment : state.selectedAppointment,
-          isLoading: false,
-          error: null,
-        }));
-
-        toast.success('Consulta cancelada com sucesso!');
-        return true;
-      } else {
-        set({
-          error: response.message || 'Erro ao cancelar consulta',
-          isLoading: false,
-        });
-        toast.error(response.message || 'Erro ao cancelar consulta');
-        return false;
+      const { appointmentService } = await import('@/services/firebaseService');
+      const currentAppointment = await appointmentService.getAppointment(id);
+      
+      if (!currentAppointment) {
+        throw new Error('Consulta não encontrada');
       }
+      
+      const cancelledAppointment = await appointmentService.updateAppointment(id, {
+        status: 'cancelled',
+        notes: reason ? `${reason}\n\n${currentAppointment.notes || ''}` : currentAppointment.notes,
+      });
+      
+      set(state => ({
+        appointments: state.appointments.map(apt => 
+          apt.id === id ? cancelledAppointment : apt
+        ),
+        upcomingAppointments: state.upcomingAppointments.filter(apt => apt.id !== id),
+        selectedAppointment: state.selectedAppointment?.id === id ? cancelledAppointment : state.selectedAppointment,
+        isLoading: false,
+        error: null,
+      }));
+
+      toast.success('Consulta cancelada com sucesso!');
+      return true;
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Erro de conexão';
+      const errorMessage = error.message || 'Erro ao cancelar consulta';
       set({
         error: errorMessage,
         isLoading: false,
@@ -360,38 +413,34 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await apiService.post<Appointment>(
-        endpoints.appointments.reschedule(id),
-        { newDate, newTime }
-      );
+      const { appointmentService } = await import('@/services/firebaseService');
+      
+      // Calcular endTime
+      const [hours, minutes] = newTime.split(':').map(Number);
+      const endTime = `${String((hours + 1) % 24).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+      
+      const rescheduledAppointment = await appointmentService.updateAppointment(id, {
+        date: newDate,
+        startTime: newTime,
+        endTime: endTime,
+      });
+      
+      set(state => ({
+        appointments: state.appointments.map(apt => 
+          apt.id === id ? rescheduledAppointment : apt
+        ),
+        upcomingAppointments: state.upcomingAppointments.map(apt => 
+          apt.id === id ? rescheduledAppointment : apt
+        ),
+        selectedAppointment: state.selectedAppointment?.id === id ? rescheduledAppointment : state.selectedAppointment,
+        isLoading: false,
+        error: null,
+      }));
 
-      if (response.success) {
-        const rescheduledAppointment = response.data;
-        
-        set(state => ({
-          appointments: state.appointments.map(apt => 
-            apt.id === id ? rescheduledAppointment : apt
-          ),
-          upcomingAppointments: state.upcomingAppointments.map(apt => 
-            apt.id === id ? rescheduledAppointment : apt
-          ),
-          selectedAppointment: state.selectedAppointment?.id === id ? rescheduledAppointment : state.selectedAppointment,
-          isLoading: false,
-          error: null,
-        }));
-
-        toast.success('Consulta reagendada com sucesso!');
-        return true;
-      } else {
-        set({
-          error: response.message || 'Erro ao reagendar consulta',
-          isLoading: false,
-        });
-        toast.error(response.message || 'Erro ao reagendar consulta');
-        return false;
-      }
+      toast.success('Consulta reagendada com sucesso!');
+      return true;
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Erro de conexão';
+      const errorMessage = error.message || 'Erro ao reagendar consulta';
       set({
         error: errorMessage,
         isLoading: false,
@@ -405,37 +454,33 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await apiService.post<Appointment>(
-        endpoints.appointments.complete(id),
-        { notes }
-      );
-
-      if (response.success) {
-        const completedAppointment = response.data;
-        
-        set(state => ({
-          appointments: state.appointments.map(apt => 
-            apt.id === id ? completedAppointment : apt
-          ),
-          upcomingAppointments: state.upcomingAppointments.filter(apt => apt.id !== id),
-          pastAppointments: [completedAppointment, ...state.pastAppointments],
-          selectedAppointment: state.selectedAppointment?.id === id ? completedAppointment : state.selectedAppointment,
-          isLoading: false,
-          error: null,
-        }));
-
-        toast.success('Consulta finalizada com sucesso!');
-        return true;
-      } else {
-        set({
-          error: response.message || 'Erro ao finalizar consulta',
-          isLoading: false,
-        });
-        toast.error(response.message || 'Erro ao finalizar consulta');
-        return false;
+      const { appointmentService } = await import('@/services/firebaseService');
+      const currentAppointment = await appointmentService.getAppointment(id);
+      
+      if (!currentAppointment) {
+        throw new Error('Consulta não encontrada');
       }
+      
+      const completedAppointment = await appointmentService.updateAppointment(id, {
+        status: 'completed',
+        notes: notes ? `${notes}\n\n${currentAppointment.notes || ''}` : currentAppointment.notes,
+      });
+      
+      set(state => ({
+        appointments: state.appointments.map(apt => 
+          apt.id === id ? completedAppointment : apt
+        ),
+        upcomingAppointments: state.upcomingAppointments.filter(apt => apt.id !== id),
+        pastAppointments: [completedAppointment, ...state.pastAppointments],
+        selectedAppointment: state.selectedAppointment?.id === id ? completedAppointment : state.selectedAppointment,
+        isLoading: false,
+        error: null,
+      }));
+
+      toast.success('Consulta finalizada com sucesso!');
+      return true;
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Erro de conexão';
+      const errorMessage = error.message || 'Erro ao finalizar consulta';
       set({
         error: errorMessage,
         isLoading: false,

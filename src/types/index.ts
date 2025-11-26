@@ -275,3 +275,163 @@ export interface ChartData {
     borderWidth?: number;
   }[];
 }
+
+// ============ GESTÃO FINANCEIRA ============
+export interface FinancialTransaction {
+  id: string;
+  userId: string;
+  type: 'revenue' | 'expense';
+  category: string;
+  description: string;
+  amount: number;
+  date: string;
+  paymentMethod: 'cash' | 'card' | 'transfer' | 'pix';
+  status: 'pending' | 'completed' | 'cancelled';
+  appointmentId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface FinancialReport {
+  id: string;
+  userId: string;
+  period: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  startDate: string;
+  endDate: string;
+  totalRevenue: number;
+  totalExpenses: number;
+  profit: number;
+  transactions: FinancialTransaction[];
+  createdAt: string;
+}
+
+export interface ProfitabilityDashboard {
+  totalRevenue: number;
+  totalExpenses: number;
+  profit: number;
+  profitMargin: number;
+  revenueByCategory: { category: string; amount: number }[];
+  expensesByCategory: { category: string; amount: number }[];
+  monthlyTrend: { month: string; revenue: number; expenses: number; profit: number }[];
+}
+
+// ============ GESTÃO DE INSUMOS ============
+export interface Supply {
+  id: string;
+  name: string;
+  category: string;
+  description?: string;
+  unit: string; // 'unidade', 'caixa', 'litro', etc
+  currentStock: number;
+  minStock: number;
+  maxStock: number;
+  unitPrice: number;
+  supplier?: string;
+  expiryDate?: string;
+  location?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SupplyMovement {
+  id: string;
+  supplyId: string;
+  type: 'entry' | 'exit' | 'adjustment';
+  quantity: number;
+  reason: string;
+  userId: string;
+  date: string;
+  createdAt: string;
+}
+
+export interface LowStockAlert {
+  id: string;
+  supplyId: string;
+  supplyName: string;
+  currentStock: number;
+  minStock: number;
+  severity: 'low' | 'critical';
+  isResolved: boolean;
+  createdAt: string;
+}
+
+export interface ConsumptionReport {
+  id: string;
+  supplyId: string;
+  supplyName: string;
+  period: string;
+  quantityUsed: number;
+  averageDailyConsumption: number;
+  estimatedDaysUntilDepletion: number;
+  createdAt: string;
+}
+
+// ============ RESULTADOS DE EXAMES ============
+export interface ExamResult {
+  id: string;
+  patientId: string;
+  professionalId: string;
+  appointmentId?: string;
+  examType: string;
+  examDate: string;
+  resultDate: string;
+  status: 'pending' | 'completed' | 'cancelled';
+  files: MedicalFile[];
+  notes?: string;
+  diagnosis?: string;
+  isShared: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ============ INTERFACE ADMINISTRATIVA ============
+export interface AdminDashboard {
+  totalUsers: number;
+  totalProfessionals: number;
+  totalPatients: number;
+  totalAppointments: number;
+  activeAppointments: number;
+  systemHealth: {
+    status: 'healthy' | 'warning' | 'critical';
+    uptime: number;
+    lastBackup: string;
+  };
+  recentActivity: AdminActivity[];
+}
+
+export interface AdminActivity {
+  id: string;
+  userId: string;
+  userName: string;
+  action: string;
+  targetType: 'user' | 'appointment' | 'system' | 'financial';
+  targetId?: string;
+  details?: string;
+  timestamp: string;
+}
+
+// ============ EXPORTAÇÃO DE RELATÓRIOS ============
+export interface ExportOptions {
+  format: 'pdf' | 'excel' | 'csv';
+  reportType: 'appointments' | 'financial' | 'supplies' | 'patients' | 'custom';
+  dateRange?: {
+    start: string;
+    end: string;
+  };
+  filters?: Record<string, any>;
+  includeCharts?: boolean;
+  includeDetails?: boolean;
+}
+
+// ============ CONFIRMAÇÃO AUTOMÁTICA ============
+export interface AutoConfirmationSettings {
+  id: string;
+  userId: string;
+  enabled: boolean;
+  confirmationTime: number; // horas antes da consulta
+  methods: ('email' | 'sms' | 'push')[];
+  template?: string;
+  createdAt: string;
+  updatedAt: string;
+}

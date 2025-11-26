@@ -2,10 +2,11 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { HelmetProvider } from 'react-helmet-async';
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 
 // Pages
 import LandingPage from '@/pages/LandingPage';
+import LoginPage from '@/pages/LoginPage';
+import RegisterPage from '@/pages/RegisterPage';
 import Dashboard from '@/pages/Dashboard';
 import PatientDashboard from '@/pages/PatientDashboard';
 import DoctorDashboard from '@/pages/DoctorDashboard';
@@ -22,9 +23,14 @@ import ProfilePage from '@/pages/ProfilePage';
 import SettingsPage from '@/pages/SettingsPage';
 import PatientsPage from '@/pages/PatientsPage';
 import ReportsPage from '@/pages/ReportsPage';
+import FinancialManagementPage from '@/pages/FinancialManagementPage';
+import SuppliesPage from '@/pages/SuppliesPage';
+import ExamResultsPage from '@/pages/ExamResultsPage';
+import AdminDashboardPage from '@/pages/AdminDashboardPage';
 
 // Components
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 const App: React.FC = () => {
   return (
@@ -64,6 +70,16 @@ const App: React.FC = () => {
             />
             
             <Route 
+              path="/login" 
+              element={<LoginPage />} 
+            />
+            
+            <Route 
+              path="/register" 
+              element={<RegisterPage />} 
+            />
+            
+            <Route 
               path="/terms" 
               element={<div>Terms of Service</div>} 
             />
@@ -72,153 +88,189 @@ const App: React.FC = () => {
               element={<div>Privacy Policy</div>} 
             />
 
-                  {/* Protected Routes */}
-                  <Route
-                    path="/dashboard"
-                    element={
-                      <SignedIn>
-                        <Dashboard />
-                      </SignedIn>
-                    }
-                  />
-                  <Route
-                    path="/patient-dashboard"
-                    element={
-                      <SignedIn>
-                        <PatientDashboard />
-                      </SignedIn>
-                    }
-                  />
-                  <Route
-                    path="/doctor-dashboard"
-                    element={
-                      <SignedIn>
-                        <DoctorDashboard />
-                      </SignedIn>
-                    }
-                  />
+            {/* Protected Routes */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/patient-dashboard"
+              element={
+                <ProtectedRoute>
+                  <PatientDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/doctor-dashboard"
+              element={
+                <ProtectedRoute>
+                  <DoctorDashboard />
+                </ProtectedRoute>
+              }
+            />
             
             <Route
               path="/appointments"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <AppointmentsPage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             
             <Route
               path="/appointments/new"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <NewAppointmentPage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             
             <Route
               path="/appointments/:id"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <div>Appointment Details</div>
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             
             <Route
               path="/medical-history"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <MedicalHistoryPage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             
             <Route
               path="/patient-medical-history"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <PatientMedicalHistoryPage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             
             <Route
               path="/doctor-medical-history"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <DoctorMedicalHistoryPage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             
             <Route
               path="/reviews"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <ReviewsPage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             
             <Route
               path="/patient-reviews"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <PatientReviewsPage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             
             <Route
               path="/doctor-reviews"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <DoctorReviewsPage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             
             <Route
               path="/support"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <SupportPage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             
             <Route
               path="/profile"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <ProfilePage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             
             <Route
               path="/settings"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <SettingsPage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/patients"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <PatientsPage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/reports"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <ReportsPage />
-                </SignedIn>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/financial"
+              element={
+                <ProtectedRoute>
+                  <FinancialManagementPage />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/supplies"
+              element={
+                <ProtectedRoute>
+                  <SuppliesPage />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/exam-results"
+              element={
+                <ProtectedRoute>
+                  <ExamResultsPage />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboardPage />
+                </ProtectedRoute>
               }
             />
 

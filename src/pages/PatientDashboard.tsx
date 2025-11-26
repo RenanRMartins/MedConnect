@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useUser } from '@clerk/clerk-react';
+import { useAuthStore } from '@/stores/authStore';
 import { useAppointmentStore } from '@/stores/appointmentStore';
 import { DashboardStats, Appointment } from '@/types';
 import Header from '@/components/layout/Header';
@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 
 const PatientDashboard: React.FC = () => {
-  const { user } = useUser();
+  const { user } = useAuthStore();
   const { 
     upcomingAppointments, 
     pastAppointments, 
@@ -62,20 +62,18 @@ const PatientDashboard: React.FC = () => {
   }, [fetchUpcomingAppointments, fetchPastAppointments]);
 
   useEffect(() => {
-    // Simular carregamento de estatísticas específicas para pacientes
-    setTimeout(() => {
-      setStats({
-        totalAppointments: upcomingAppointments.length + pastAppointments.length,
-        upcomingAppointments: upcomingAppointments.length,
-        completedAppointments: pastAppointments.filter(apt => apt.status === 'completed').length,
-        cancelledAppointments: pastAppointments.filter(apt => apt.status === 'cancelled').length,
-        totalRevenue: 0, // Pacientes não veem receita
-        averageRating: 4.8,
-        newPatients: 0, // Pacientes não veem estatísticas de novos pacientes
-        returningPatients: 0, // Pacientes não veem estatísticas de pacientes retornantes
-      });
-    }, 1000);
-  }, [upcomingAppointments.length, pastAppointments.length]);
+    // Atualizar estatísticas quando as consultas mudarem
+    setStats({
+      totalAppointments: upcomingAppointments.length + pastAppointments.length,
+      upcomingAppointments: upcomingAppointments.length,
+      completedAppointments: pastAppointments.filter(apt => apt.status === 'completed').length,
+      cancelledAppointments: pastAppointments.filter(apt => apt.status === 'cancelled').length,
+      totalRevenue: 0, // Pacientes não veem receita
+      averageRating: 4.8,
+      newPatients: 0, // Pacientes não veem estatísticas de novos pacientes
+      returningPatients: 0, // Pacientes não veem estatísticas de pacientes retornantes
+    });
+  }, [upcomingAppointments, pastAppointments]);
 
   const quickActions = [
     {

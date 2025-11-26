@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react';
+import { Link } from 'react-router-dom';
+import { useAuthStore } from '@/stores/authStore';
 import { useTheme } from '@/contexts/ThemeContext';
 import { 
   Stethoscope, 
@@ -31,6 +32,7 @@ import Button from '@/components/ui/Button';
 
 const LandingPage: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
+  const { isAuthenticated } = useAuthStore();
   const features = [
     {
       icon: Calendar,
@@ -141,26 +143,28 @@ const LandingPage: React.FC = () => {
                 )}
               </button>
 
-              <SignedOut>
-                <SignInButton mode="modal">
-                  <Button variant="outline" size="sm">
-                    Entrar
+              {!isAuthenticated ? (
+                <>
+                  <Link to="/login">
+                    <Button variant="outline" size="sm">
+                      Entrar
+                    </Button>
+                  </Link>
+                  <Link to="/register">
+                    <Button size="sm" className="bg-primary-600 hover:bg-primary-700">
+                      Começar Agora
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <Link to="/dashboard">
+                  <Button 
+                    className="bg-primary-600 hover:bg-primary-700"
+                  >
+                    Ir para Dashboard
                   </Button>
-                </SignInButton>
-                <SignInButton mode="modal">
-                  <Button size="sm" className="bg-primary-600 hover:bg-primary-700">
-                    Começar Agora
-                  </Button>
-                </SignInButton>
-              </SignedOut>
-              <SignedIn>
-                <Button 
-                  onClick={() => window.location.href = '/dashboard'}
-                  className="bg-primary-600 hover:bg-primary-700"
-                >
-                  Ir para Dashboard
-                </Button>
-              </SignedIn>
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -190,24 +194,24 @@ const LandingPage: React.FC = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <SignedOut>
-                  <SignInButton mode="modal">
+                {!isAuthenticated ? (
+                  <Link to="/register">
                     <Button size="lg" className="bg-primary-600 hover:bg-primary-700 text-lg px-8 py-4">
                       <Calendar className="w-5 h-5 mr-2" />
                       Agendar Consulta
                     </Button>
-                  </SignInButton>
-                </SignedOut>
-                <SignedIn>
-                  <Button 
-                    size="lg" 
-                    onClick={() => window.location.href = '/appointments/new'}
-                    className="bg-primary-600 hover:bg-primary-700 text-lg px-8 py-4"
-                  >
-                    <Calendar className="w-5 h-5 mr-2" />
-                    Agendar Consulta
-                  </Button>
-                </SignedIn>
+                  </Link>
+                ) : (
+                  <Link to="/appointments/new">
+                    <Button 
+                      size="lg" 
+                      className="bg-primary-600 hover:bg-primary-700 text-lg px-8 py-4"
+                    >
+                      <Calendar className="w-5 h-5 mr-2" />
+                      Agendar Consulta
+                    </Button>
+                  </Link>
+                )}
                 
                 <Button 
                   size="lg" 
@@ -435,24 +439,24 @@ const LandingPage: React.FC = () => {
               Junte-se a milhares de pessoas que já transformaram sua experiência médica com o MedConnect.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <SignedOut>
-                <SignInButton mode="modal">
+              {!isAuthenticated ? (
+                <Link to="/register">
                   <Button size="lg" className="bg-white text-primary-600 hover:bg-gray-50 text-lg px-8 py-4">
                     <Calendar className="w-5 h-5 mr-2" />
                     Começar Agora
                   </Button>
-                </SignInButton>
-              </SignedOut>
-              <SignedIn>
-                <Button 
-                  size="lg" 
-                  onClick={() => window.location.href = '/dashboard'}
-                  className="bg-white text-primary-600 hover:bg-gray-50 text-lg px-8 py-4"
-                >
-                  <Calendar className="w-5 h-5 mr-2" />
-                  Ir para Dashboard
-                </Button>
-              </SignedIn>
+                </Link>
+              ) : (
+                <Link to="/dashboard">
+                  <Button 
+                    size="lg" 
+                    className="bg-white text-primary-600 hover:bg-gray-50 text-lg px-8 py-4"
+                  >
+                    <Calendar className="w-5 h-5 mr-2" />
+                    Ir para Dashboard
+                  </Button>
+                </Link>
+              )}
               
               <Button 
                 size="lg" 

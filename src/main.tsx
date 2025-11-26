@@ -1,26 +1,29 @@
-import { StrictMode } from 'react'
+import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import { ClerkProvider } from '@clerk/clerk-react'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { UserRoleProvider } from './contexts/UserRoleContext'
+import { useAuthStore } from './stores/authStore'
 
-// Import your Publishable Key
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-
-if (!PUBLISHABLE_KEY) {
-  throw new Error('Add your Clerk Publishable Key to the .env file')
-}
+// Componente para inicializar autenticação
+const AuthInitializer = () => {
+  const { initializeAuth } = useAuthStore();
+  
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
+  
+  return null;
+};
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-      <ThemeProvider>
-        <UserRoleProvider>
-          <App />
-        </UserRoleProvider>
-      </ThemeProvider>
-    </ClerkProvider>
+    <ThemeProvider>
+      <UserRoleProvider>
+        <AuthInitializer />
+        <App />
+      </UserRoleProvider>
+    </ThemeProvider>
   </StrictMode>,
 )
